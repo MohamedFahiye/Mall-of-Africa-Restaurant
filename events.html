@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events | Mall of Africa Restaurant</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .events-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .event-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .event-card img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .event-card h3 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .event-card p {
+      color: #555;
+    }
+
+    .event-date {
+      font-weight: bold;
+      color: #f39c12;
+      margin-top: 10px;
+    }
+
+    form input, form select, form textarea {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #rsvp-response {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Mall of Africa</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="order.html">Order</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="container">
+    <h2>Upcoming Events</h2>
+    <p>Join us for exciting community gatherings, live performances, and culinary celebrations!</p>
+
+    <div class="events-section">
+      <div class="event-card">
+        <img src="images/drumming-night.jpg" alt="First Event">
+        <h3>First event</h3>
+        <p>Updated later.</p>
+        <div class="event-date">May 25, 2025 | 6:00 PM</div>
+      </div>
+
+      <div class="event-card">
+        <img src="images/chefs-tasting.jpg" alt="Second Event">
+        <h3>Second Event</h3>
+        <p>Updated Later.</p>
+        <div class="event-date">June 3, 2025 | 7:00 PM</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP Form -->
+  <section class="container" style="margin-top: 50px;">
+    <h2>RSVP to an Event</h2>
+    <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbz3X7CL4Bdlx0AbggZnTkd4arS7UvIbdXrwIlun4GcaKHdPpkrF3y077mi7yDgg9qo--w/exec" method="POST">
+      <div style="display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto;">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required placeholder="Your name" />
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com" />
+
+        <label for="event">Select Event</label>
+        <select id="event" name="event" required>
+          <option value="">-- Please choose an event --</option>
+          <option value="First Event">First event - May 25</option>
+          <option value="Second Event">Second event - June 3</option>
+        </select>
+
+        <label for="message">Additional Message (optional)</label>
+        <textarea id="message" name="message" rows="4" placeholder="Any special requests?"></textarea>
+
+        <button type="submit" class="cta-button">Submit RSVP</button>
+      </div>
+    </form>
+    <div id="rsvp-response">Thank you! Your RSVP has been submitted.</div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Mall of Africa Restaurant</p>
+  </footer>
+
+  <script>
+    document.getElementById('rsvp-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const action = form.action;
+
+      fetch(action, {
+        method: 'POST',
+        body: data
+      }).then(() => {
+        form.reset();
+        document.getElementById('rsvp-response').style.display = 'block';
+      }).catch(() => {
+        alert("There was an issue submitting your RSVP. Please try again.");
+      });
+    });
+  </script>
+</body>
+</html>

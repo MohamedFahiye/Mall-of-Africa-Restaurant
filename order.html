@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order | Mall of Africa</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .cart-item button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-item button:hover {
+      background-color: #cc0000;
+    }
+
+    .cta-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .cta-button:hover {
+      background-color: #45a049;
+    }
+
+    .checkout-confirmation {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #e6ffe6;
+      border: 1px solid #b2ffb2;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Mall of Africa</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="order.html">Order</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="container">
+    <h2>Your Order</h2>
+    <div id="cart-items"></div>
+    <p id="total-amount"></p>
+    <button class="cta-button" id="checkout-btn" disabled>Proceed to Checkout</button>
+    <div id="confirmation" class="checkout-confirmation" style="display:none;"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Mall of Africa Restaurant</p>
+  </footer>
+
+  <script>
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartDiv = document.getElementById("cart-items");
+      const totalAmount = document.getElementById("total-amount");
+      const checkoutBtn = document.getElementById("checkout-btn");
+
+      if (cart.length === 0) {
+        cartDiv.innerHTML = "<p>Your cart is currently empty.</p>";
+        totalAmount.innerText = "";
+        checkoutBtn.disabled = true;
+        return;
+      }
+
+      let html = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price;
+        html += `
+          <div class="cart-item">
+            <span>${item.name} - $${item.price.toFixed(2)}</span>
+            <button onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+      });
+
+      cartDiv.innerHTML = html;
+      totalAmount.innerHTML = `<strong>Total: $${total.toFixed(2)}</strong>`;
+      checkoutBtn.disabled = false;
+    }
+
+    function removeItem(index) {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function checkout() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) return;
+
+      let confirmationHTML = "<h3>Thank you for your order!</h3><ul>";
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price;
+        confirmationHTML += `<li>${item.name} - $${item.price.toFixed(2)}</li>`;
+      });
+      confirmationHTML += `</ul><p><strong>Total Paid:</strong> $${total.toFixed(2)}</p>`;
+      confirmationHTML += `<p>We'll start preparing your food shortly!</p>`;
+
+      document.getElementById("confirmation").innerHTML = confirmationHTML;
+      document.getElementById("confirmation").style.display = "block";
+
+      localStorage.removeItem("cart");
+      renderCart();
+    }
+
+    document.getElementById("checkout-btn").addEventListener("click", checkout);
+
+    renderCart();
+  </script>
+</body>
+</html>

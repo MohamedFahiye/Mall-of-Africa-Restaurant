@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu | Mall of Africa</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Mall of Africa</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="order.html">Order</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="container">
+    <h2>Our Menu</h2>
+    <div class="menu-grid">
+        <div class="menu-item">
+            <img src="jollof.jpg" alt="Jollof Rice">
+            <h3>Jollof Rice</h3>
+            <p>$12.00</p>
+            <button onclick="addToCart('Jollof Rice', 12)">Add to Cart</button>
+          </div>
+      <div class="menu-item">
+        <img src="fufu.jpg" alt="Fufu & Egusi">
+        <h3>Fufu & Egusi</h3>
+        <p>$14.00</p>
+        <button onclick="addToCart('Fufu & Egusi', 14)">Add to Cart</button>
+      </div>
+      <!-- Add more menu items here -->
+    </div>
+  </section>
+  <script>
+    // Add item to cart and store in localStorage
+    function addToCart(itemName, itemPrice) {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push({ name: itemName, price: itemPrice });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(itemName + " has been added to your cart.");
+    }
+  </script>
+  <footer>
+    <p>&copy; 2025 Mall of Africa Restaurant</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout | Mall of Africa</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Mall of Africa</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="order.html">Order</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="container">
+    <h2>Checkout</h2>
+    <div id="order-summary"></div>
+    <p id="total-amount"></p>
+    <button class="cta-button" id="pay-button">Pay Now</button>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Mall of Africa Restaurant</p>
+  </footer>
+
+  <script>
+    const stripe = Stripe("pk_test_XXXXXXXXXXXXXXXXXXXXXXXX"); // Replace with your Stripe public key
+
+    function loadSummary() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const summary = document.getElementById("order-summary");
+      const totalAmount = document.getElementById("total-amount");
+
+      if (cart.length === 0) {
+        summary.innerHTML = "<p>Your cart is empty.</p>";
+        document.getElementById("pay-button").disabled = true;
+        return;
+      }
+
+      let html = "<ul>";
+      let total = 0;
+      cart.forEach(item => {
+        html += `<li>${item.name} - $${item.price.toFixed(2)}</li>`;
+        total += item.price;
+      });
+      html += "</ul>";
+      summary.innerHTML = html;
+      totalAmount.innerHTML = `<strong>Total: $${total.toFixed(2)}</strong>`;
+    }
+
+    document.getElementById("pay-button").addEventListener("click", async () => {
+      // You must have a backend to create this session
+      const response = await fetch("/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: localStorage.getItem("cart"),
+      });
+
+      const session = await response.json();
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id
+      });
+
+      if (result.error) {
+        alert(result.error.message);
+      }
+    });
+
+    loadSummary();
+  </script>
+</body>
+</html>
